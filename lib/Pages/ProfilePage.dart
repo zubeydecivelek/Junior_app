@@ -9,7 +9,6 @@ import 'package:juniorapp/Services/blogService.dart';
 import 'package:juniorapp/Models/UserModel.dart';
 import 'package:juniorapp/Pages/pricingPage.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
