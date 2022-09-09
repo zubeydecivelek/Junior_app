@@ -54,6 +54,8 @@ dependencies:
   firebase_storage: ^10.3.8
   image_cropper: ^3.0.0
   flutter_share: ^2.0.0
+  flutter_credit_card: ^3.0.3
+  http: ^0.13.5
 
 
 dev_dependencies:
