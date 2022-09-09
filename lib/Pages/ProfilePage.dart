@@ -152,11 +152,10 @@ class _ProfilePageState extends State<ProfilePage> {
       }break;
       case 1: {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => PricingPage(true)));
-        print("abone ol");
+
       }break;
       case 2: {
-        List<String> linkParts = getPartsofLink("https://senyor.app/sss/");
-        BlogService().launchURL(linkParts.first, linkParts.last);
+        BlogService().launchURL("senyor.app", "sss/");
       }break;
       case 3: {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShareOpions()));
@@ -220,19 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ));
   }
   
-  getPartsofLink(String link){
-    link = link.substring(8);
-    List<String> parts = [];
-    String host = "";
-    int i;
-    for(i=0;link[i]!="/";i++){
-      host = host+link[i];
-    }
-    parts.add(host);
-    link = link.substring(i+1);
-    parts.add(link);
-    return parts;
-  }
+
 
 }
 
