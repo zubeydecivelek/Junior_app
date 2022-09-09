@@ -8,7 +8,8 @@ import 'package:juniorapp/Services/authService.dart';
 import 'package:juniorapp/Services/blogService.dart';
 import 'package:juniorapp/Models/UserModel.dart';
 import 'package:juniorapp/Pages/pricingPage.dart';
-
+import 'package:flutter_share/flutter_share.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -170,6 +171,8 @@ class _ProfilePageState extends State<ProfilePage> {
       }break;
       case 5:{
         print("paylaş");
+        //TODO FLUTTER SHARE KULLAN
+        //share();
       }break;
       case 6:{
         print("çıkış");
@@ -236,6 +239,15 @@ class _ProfilePageState extends State<ProfilePage> {
     link = link.substring(i+1);
     parts.add(link);
     return parts;
+  }
+
+  Future<void> share() async {
+    await FlutterShare.share(
+        title: 'Uygulamayı paylaş',
+        text: "Haydi sen de Juniorapp'i indir ayrıcalıkların farkına var!",
+        linkUrl: 'https://www.youtube.com/watch?v=yG3mCxwOVoU',
+        chooserTitle: 'Paylaşacağın uygulamayı seç...'
+    );
   }
 
 }
