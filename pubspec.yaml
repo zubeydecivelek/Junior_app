@@ -51,9 +51,11 @@ dependencies:
   video_player: ^2.4.7
   youtube_player_flutter: ^8.1.0
   image_picker: ^0.8.5+3
+  firebase_storage: ^10.3.8
+  image_cropper: ^3.0.0
+  flutter_share: ^2.0.0
   flutter_credit_card: ^3.0.3
   http: ^0.13.5
-
 
 
 dev_dependencies:
