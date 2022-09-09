@@ -10,7 +10,6 @@ import 'package:juniorapp/Pages/pricingPage.dart';
 import 'Pages/ProfilePage.dart';
 
 import 'package:juniorapp/Pages/blogPage.dart';
-import 'package:juniorapp/Pages/home.dart';
 import 'package:juniorapp/Pages/splashScreen.dart';
 
 
