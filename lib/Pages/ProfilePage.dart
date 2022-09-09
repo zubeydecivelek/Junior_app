@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Pages/ShareOpions.dart';
 import 'package:juniorapp/Pages/UserModelInfo.dart';
+import 'package:juniorapp/Pages/creatingLecturePage.dart';
 import 'package:juniorapp/Services/authService.dart';
 import 'package:juniorapp/Services/blogService.dart';
 import 'package:juniorapp/Models/UserModel.dart';
@@ -120,16 +121,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         itemCount: 7),
                     Divider(thickness: 1,),
 
-                    Padding(
+                    if (user.isAdmin)
+                      Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           IconButton(icon: Icon(Icons.add_box_outlined,), onPressed: () {
                             //TODO avantaj ekle
+                            ///İPTAL
                           },),
                           IconButton(icon: Icon(Icons.video_call_outlined), onPressed: () {
-                            //TODO ders videosu ekle
+                            //TODO ders ekle
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CreatingLecturePage()));
                           },),
                         ],
                       ),

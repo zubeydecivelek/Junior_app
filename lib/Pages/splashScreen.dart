@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:juniorapp/Pages/home.dart';
+import 'package:juniorapp/Pages/landingPage.dart';
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -12,7 +13,7 @@ class SplashScreen extends StatelessWidget {
             Image.asset("assets/images/animation.gif"),
           ],
         ),
-        nextScreen: Home(),
+        nextScreen: LandingPage(),
       duration: 3000,
 
  splashIconSize: MediaQuery.of(context).size.width,
