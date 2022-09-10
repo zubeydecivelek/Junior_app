@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             Container(width: width, height: width/10,child: Padding(padding: EdgeInsets.only(left: 15,), child: Text("Juniorapp", style: TextStyle(color: ColorPalette().blue,fontWeight: FontWeight.bold, fontSize: width/18),),)),
           ],
         ),
-      )
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
