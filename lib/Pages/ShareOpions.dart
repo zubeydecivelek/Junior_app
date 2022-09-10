@@ -12,7 +12,16 @@ class ShareOpions extends StatefulWidget {
 
 class _ShareOpionsState extends State<ShareOpions> {
 
+  @override
+  void initState() {
+
+    super.initState();
+
+    _controller.addListener(() { hasTextFunction(_controller.text.trim());});
+  }
+
   var _controller = TextEditingController();
+  bool hasText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,7 @@ class _ShareOpionsState extends State<ShareOpions> {
                     child: SizedBox(
                       height: height * 0.06,
                       width: width * 0.8,
-                      child: (!_controller.text.isEmpty)
+                      child: (hasText)
                           ? ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.indigoAccent,
@@ -49,8 +58,8 @@ class _ShareOpionsState extends State<ShareOpions> {
                           ),
                         ),
                         onPressed: ()  {
-                          print("buuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu: ${_controller.text.trim()}");
                           AuthService().sendOpinion(_controller.text.trim());
+                          Navigator.of(context).pop();
                         },
                         child: Text("Gönder"),
                       ):Container(
@@ -120,5 +129,17 @@ class _ShareOpionsState extends State<ShareOpions> {
         ),
       ),
     );
+  }
+
+  void hasTextFunction(String controller){
+    if (controller.isEmpty) {
+      setState(() {
+        hasText= false;
+      });
+    }else {
+      setState(() {
+        hasText= true;
+      });
+    }
   }
 }

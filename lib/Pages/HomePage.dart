@@ -22,47 +22,30 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(width / 6),
-        child: AppBar(
-          elevation: 0,
-          actions: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.calendar_today_outlined,
-                        color: ColorPalette().blue,
-                      )),
-                ),
-              ],
-            )
-          ],
-          backgroundColor: ColorPalette().white,
-          leadingWidth: width,
-          leading: Column(
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Padding(
-                padding: EdgeInsets.only(
-                  left: 15,
-                ),
-                child: Text(
-                  "Juniorapp",
-                  style: TextStyle(
-                      color: ColorPalette().blue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                ),
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(onPressed: (){
+
+                }, icon: Icon(Icons.calendar_today_outlined,color: ColorPalette().blue,)),
               ),
             ],
-          ),
+          )
+        ],
+        backgroundColor: ColorPalette().white,
+        leadingWidth: width,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(width: width, height: width/10,child: Padding(padding: EdgeInsets.only(left: 15,), child: Text("Juniorapp", style: TextStyle(color: ColorPalette().blue,fontWeight: FontWeight.bold, fontSize: width/18),),)),
+          ],
         ),
-      ),
+      )
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:juniorapp/ColorPalette.dart';
 
 
 class PaymentPage extends StatefulWidget {
@@ -24,6 +25,10 @@ class _PaymentPageState extends State<PaymentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(
+          child:Icon(Icons.arrow_back_ios) ,
+          onTap: (){},
+        ),
         title: Text("Ödeme Sistemi"),
         centerTitle: true,
       ),
@@ -31,11 +36,11 @@ class _PaymentPageState extends State<PaymentPage> {
         decoration: BoxDecoration(
           image: !useBackgroundImage
               ? const DecorationImage(
-            image: ExactAssetImage('assets/images/bgg.png'),
+            image: ExactAssetImage('assets/images/bg2.png'),
             fit: BoxFit.fill,
           )
               : null,
-          color: Colors.black,
+          color: Colors.white70,
         ),
         child: SafeArea(
           child: Column(
@@ -50,12 +55,12 @@ class _PaymentPageState extends State<PaymentPage> {
                 expiryDate: expiryDate,
                 cardHolderName: cardHolderName,
                 cvvCode: cvvCode,
-                bankName: 'Sirac Bank',
+                bankName: 'JuniorBank',
                 showBackView: isCvvFocused,
                 obscureCardNumber: true,
                 obscureCardCvv: true,
                 isHolderNameVisible: true,
-                cardBgColor: Colors.red,
+                cardBgColor: ColorPalette().blue,
                 backgroundImage: null,
                 isSwipeGestureEnabled: true,
                 onCreditCardWidgetChange:
@@ -64,7 +69,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   CustomCardTypeIcon(
                     cardType: CardType.mastercard,
                     cardImage: Image.asset(
-                      'assets/mastercard.png',
+                      'assets/images/mastercard.png',
                       height: 48,
                       width: 48,
                     ),
@@ -89,7 +94,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         themeColor: Colors.blue,
                         textColor: Colors.blue,
                         cardNumberDecoration: InputDecoration(
-                          fillColor: Colors.grey,
+                          fillColor: Colors.grey[400],
                           filled: true,
                           labelText: 'Kart Numarası',
                           hintText: 'XXXX XXXX XXXX XXXX',
@@ -99,7 +104,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           enabledBorder: border,
                         ),
                         expiryDateDecoration: InputDecoration(
-                          fillColor: Colors.grey,
+                          fillColor: Colors.grey[400],
                           filled: true,
                           hintStyle: const TextStyle(color: Colors.white),
                           labelStyle: const TextStyle(color: Colors.white),
@@ -109,7 +114,7 @@ class _PaymentPageState extends State<PaymentPage> {
                           hintText: 'XX/XX',
                         ),
                         cvvCodeDecoration: InputDecoration(
-                          fillColor: Colors.grey,
+                          fillColor: Colors.grey[400],
                           filled: true,
                           hintStyle: const TextStyle(color: Colors.white),
                           labelStyle: const TextStyle(color: Colors.white),
@@ -120,7 +125,7 @@ class _PaymentPageState extends State<PaymentPage> {
                         ),
                         cardHolderDecoration: InputDecoration(
 
-                          fillColor: Colors.grey,
+                          fillColor: Colors.grey[400],
                           filled: true,
                           hintStyle: const TextStyle(color: Colors.white),
                           labelStyle: const TextStyle(color: Colors.white),
@@ -133,52 +138,10 @@ class _PaymentPageState extends State<PaymentPage> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text(
-                            'Glassmorphism',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Switch(
-                            value: useGlassMorphism,
-                            inactiveTrackColor: Colors.grey,
-                            activeColor: Colors.white,
-                            activeTrackColor: Colors.green,
-                            onChanged: (bool value) => setState(() {
-                              useGlassMorphism = value;
-                            }),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text(
-                            'Card Image',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                          Switch(
-                            value: useBackgroundImage,
-                            inactiveTrackColor: Colors.grey,
-                            activeColor: Colors.white,
-                            activeTrackColor: Colors.green,
-                            onChanged: (bool value) => setState(() {
-                              useBackgroundImage = value;
-                            }),
-                          ),
-                        ],
-                      ),
                       const SizedBox(
                         height: 20,
                       ),
-                      ElevatedButton(
+                   /*   ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
@@ -200,12 +163,30 @@ class _PaymentPageState extends State<PaymentPage> {
                         onPressed: () {
 
                         },
-                      ),
+                      ), */
                     ],
                   ),
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white54,
+        child: SizedBox(
+          height: 50,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(55,10,55,10),
+            child: ElevatedButton(
+              child: Text("ÖDE!"),
+              onPressed: (){},
+              style: ElevatedButton.styleFrom(backgroundColor: ColorPalette().blue,
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(30.0),
+                ),
+              ),
+            ),
           ),
         ),
       ),
