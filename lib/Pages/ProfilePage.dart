@@ -9,6 +9,7 @@ import 'package:juniorapp/Services/blogService.dart';
 import 'package:juniorapp/Models/UserModel.dart';
 import 'package:juniorapp/Pages/pricingPage.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:launch_review/launch_review.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -48,18 +49,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
       //TODO navigation bar
 
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(width/6),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: ColorPalette().white,
-          leadingWidth: width,
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(padding: EdgeInsets.only(left: 15,), child: Text("Profilim", style: TextStyle(color: ColorPalette().blue,fontWeight: FontWeight.bold, fontSize: 30),),),
-            ],
-          ),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: ColorPalette().white,
+        leadingWidth: width,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(padding: EdgeInsets.only(left: 15,), child: Container(width: width, height: width/10,child: Text("Profilim", style: TextStyle(color: ColorPalette().blue,fontWeight: FontWeight.bold, fontSize: width/14),)),),
+          ],
         ),
       ),
 
@@ -165,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShareOpions()));
       }break;
       case 4: {
-        print("bizi değerlendir");
+        RateUs();
       }break;
       case 5:{
         print("paylaş");
@@ -180,6 +178,12 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
 
+  }
+
+  RateUs(){
+    LaunchReview.launch(
+      androidAppId: "com.megapascal.senyorappp",
+    );
   }
 
   ExitPopUp(){
