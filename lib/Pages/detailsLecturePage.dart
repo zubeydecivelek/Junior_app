@@ -36,7 +36,9 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios,color: ColorPalette().blue,),
-          onTap: (){},
+          onTap: (){
+            Navigator.of(context).pop();
+          },
         ),
         title: Text("Ders Detayı",style: TextStyle(color: ColorPalette().blue),),
         centerTitle: true,
@@ -86,7 +88,10 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                           ),
                         ),
                       ),
-                      Text(widget.lectureObj.publishedByNameAndPP["Name"]!,),
+                       Padding(
+                         padding: const EdgeInsets.only(left: 8.0),
+                         child: Text(widget.lectureObj.publishedByNameAndPP["Name"]!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
+                       ),
                     ],
                   ),
                   Padding(
