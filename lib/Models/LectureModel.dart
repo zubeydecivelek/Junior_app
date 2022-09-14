@@ -7,10 +7,26 @@ class LectureModel{
   String imageLink;
   Timestamp time;
   String title;
-  UserModel publishedBy;
+  Map<String, String> publishedByNameAndPP;
   String statement;
   String requirements;
+  String liveVideoLink;
+  bool isStreaming;
 
-  LectureModel(this.lectureID, this.imageLink, this.time, this.title, this.publishedBy,
-      this.statement, this.requirements);
+  LectureModel(this.lectureID, this.imageLink, this.time, this.title, this.publishedByNameAndPP,
+      this.statement, this.requirements,this.liveVideoLink,this.isStreaming);
+
+  factory LectureModel.fromSnapshot(DocumentSnapshot doc){
+    return LectureModel(
+      doc["lectureID"],
+      doc["imageLink"],//
+      doc["time"],//
+      doc["title"],//
+      doc["publishedByNameAndPP"].cast<String,String>(),//
+      doc["statement"],//
+      doc["requirements"],//
+      doc["liveVideoLink"],//
+      doc["isStreaming"],//
+    );
+  }
 }

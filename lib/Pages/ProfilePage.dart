@@ -80,7 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       padding: const EdgeInsets.only(bottom: 45.0),
                       child: Row(
                         children: [
-                          CircleAvatar(backgroundColor: ColorPalette().blue,radius: width/10,),
+                          CircleAvatar(backgroundImage: NetworkImage(user.ppLink),
+                            backgroundColor: Colors.transparent,radius: width/10,),
                           Padding(
                             padding:EdgeInsets.only(left: 15.0),
                             child: Column(
