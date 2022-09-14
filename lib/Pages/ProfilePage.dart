@@ -168,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
       case 5:{
         print("paylaş");
         //TODO FLUTTER SHARE KULLAN
-        //share();
+        share();
       }break;
       case 6:{
         print("çıkış");
@@ -237,6 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
         text: "Haydi sen de Juniorapp'i indir ayrıcalıkların farkına var!",
         linkUrl: 'https://www.youtube.com/watch?v=yG3mCxwOVoU',
         chooserTitle: 'Paylaşacağın uygulamayı seç...'
+
     );
   }
 

@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:juniorapp/Pages/RegisterPage.dart';
 import 'package:juniorapp/Pages/SignUpPage.dart';
 import 'package:juniorapp/Pages/landingPage.dart';
+import 'package:juniorapp/Pages/paymentPage.dart';
 import 'package:juniorapp/Pages/pricingPage.dart';
 
 import 'Pages/ProfilePage.dart';
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         textTheme: GoogleFonts.montserratTextTheme(Theme.of(context).textTheme),
       ),
       debugShowCheckedModeBanner: false,
-      home: LandingPage(),
+      home: PaymentPage(),
     );
   }
 }

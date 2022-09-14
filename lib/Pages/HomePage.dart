@@ -5,6 +5,8 @@ import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/VideoItemModel.dart';
 import 'package:juniorapp/Pages/VideoPlayerPage.dart';
 
+import '../Services/videoService.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -17,15 +19,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<String> photos = [];
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fmandala.jpeg?alt=media&token=583b345e-b985-46e7-86e4-47ac41e30dc3");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fe-nab%C4%B1z.jpeg?alt=media&token=ba9a3d7a-cbfb-4828-8124-f7690ae9ec5b");
-
-    VideoItemModel video = VideoItemModel(headline: "BİLGİ YARIŞMASI", owner: "JUNIORAPP", photoLink: "https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c", videoLink: "https://www.youtube.com/watch?v=4_XmfYsCAmA");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -57,7 +52,6 @@ class _HomePageState extends State<HomePage> {
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           children: [
-
             // InkWell(
             //   child: Container(
             //     height: 150,
@@ -110,51 +104,86 @@ class _HomePageState extends State<HomePage> {
                 },
                 viewportFraction: 0.75,
                 scale: 0.9,
-
               ),
             ),
-
 
             ///TODO canlı diye bir row daha olmalı
             ///ama o firebaseden çekerken yapılır
 
-            Padding(padding: EdgeInsets.all(20),
+            Padding(
+              padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Text("Bugün", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: ColorPalette().grey),),
-                  Text("Tümünü Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),)
+                  Text(
+                    "Bugün",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().grey),
+                  ),
+                  Text(
+                    "Tümünü Gör",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().blue),
+                  )
                 ],
               ),
             ),
 
+            Center(
+                child: Container(
+              width: width - 50,
+              height: 150,
+              color: Colors.blue,
+            )),
 
-
-            Center(child: Container(width: width-50,height: 150,color: Colors.blue,)),
-
-
-
-            Padding(padding: EdgeInsets.all(20),
+            Padding(
+              padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Text("Yarın", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: ColorPalette().grey),),
-                  Text("Tümünü Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),)
+                  Text(
+                    "Yarın",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().grey),
+                  ),
+                  Text(
+                    "Tümünü Gör",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().blue),
+                  )
                 ],
               ),
             ),
 
-
-
-            Center(child: Container(width: width-50,height: 150,color: Colors.blue,)),
-
-
+            Center(
+                child: Container(
+              width: width - 50,
+              height: 150,
+              color: Colors.blue,
+            )),
 
             Padding(
               padding: const EdgeInsets.all(50.0),
-              child: Center(child: Text("Tüm Dersleri Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),),),
+              child: Center(
+                child: Text(
+                  "Tüm Dersleri Gör",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: ColorPalette().blue),
+                ),
+              ),
             )
           ],
         ),
