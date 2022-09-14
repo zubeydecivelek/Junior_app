@@ -4,7 +4,7 @@ import 'package:juniorapp/Models/LectureModel.dart';
 import 'package:juniorapp/Pages/detailsLecturePage.dart';
 class LecturesPage extends StatefulWidget {
   LecturesPage({required this.lectureList});
-  List<LectureModel> lectureList=[];
+  List<LectureModel> lectureList;
 
   @override
   State<LecturesPage> createState() => _LecturesPageState();
@@ -17,7 +17,10 @@ class _LecturesPageState extends State<LecturesPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios,color: ColorPalette().blue,),
-          onTap: (){},
+          onTap: (){
+            Navigator.of(context).pop();
+
+          },
         ),
         title: Text("Tüm Dersler",style: TextStyle(color: ColorPalette().blue,),),
         centerTitle: true,
@@ -75,12 +78,13 @@ class _LecturesPageState extends State<LecturesPage> {
                                     color: Colors.grey,
                                     borderRadius: BorderRadius.circular(30),
                                     image: DecorationImage(
-                                      image:NetworkImage(widget.lectureList[index].publishedBy.ppLink),
+                                      image:NetworkImage(widget.lectureList[index].publishedByNameAndPP[
+                                      "ppLink"]!),
                                     ),
                                   ),
                                 ),
                               ),
-                              Text("${widget.lectureList[index].publishedBy.name} ${widget.lectureList[index].publishedBy.surname}",style: TextStyle(fontSize: 15),),
+                              Text(widget.lectureList[index].publishedByNameAndPP["Name"]!,style: TextStyle(fontSize: 15),),
                             ],
                           ),
                           Center(
