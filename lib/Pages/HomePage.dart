@@ -1,3 +1,5 @@
+import 'package:card_swiper/card_swiper.dart';
+import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/VideoItemModel.dart';
@@ -77,55 +79,31 @@ class _HomePageState extends State<HomePage> {
 
             Container(
               height: 150,
-              width: width / 1.1,
-              child: FutureBuilder(
-                future: VideoService().getVideos(),
-                builder: ((context, AsyncSnapshot snap) {
-                  if (!snap.hasData) {
-                    return Center(
-                        child: Text(
-                      "Loading...",
-                      style: TextStyle(color: Colors.black26, fontSize: 25),
-                    ));
-                  } else {
-                    List<VideoItemModel> videoList = snap.data;
-                    return PageView.builder(
-                      controller: PageController(viewportFraction: 0.7),
-                      onPageChanged: (int index) =>
-                          setState(() => _index = index),
-                      itemCount: videoList.length,
-                      scrollDirection: Axis.horizontal,
-                      physics: const PageScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Transform.scale(
-                          scale: index == _index ? 1 : 0.9,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      VideoPlayerPage(video: videoList[index])));
-                            },
-                            child: Card(
-                              child: Stack(
-                                children: [
-                                  Image.network(videoList[index].photoLink,fit: BoxFit.cover),
-                                  Positioned(
-                                      left: (width - 30) / 3.3,
-                                      top: 60,
-                                      child: Icon(
-                                        Icons.play_circle_rounded,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                }),
+              width: width/1.1,
+              child: Swiper(itemCount: photos.length,
+                itemBuilder: (context, index) {
+                return
+                Stack(
+                  children: [
+                    Image.network(photos[index]),
+                    Positioned(top: 75-(width/26),right: width/3.3,child: DecoratedIcon(
+                        Icons.play_circle,
+                      color: Colors.white,
+                      size: width/13,
+                      shadows: [
+                  BoxShadow(
+                  color: ColorPalette().grey,
+                  blurRadius: 20,
+                  spreadRadius: 0,
+                  offset: Offset(0, 0)
+                  ),
+                      ],
+                    ))
+                  ],
+                );
+                },
+                viewportFraction: 0.75,
+                scale: 0.9,
               ),
             ),
 

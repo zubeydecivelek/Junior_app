@@ -59,6 +59,8 @@ dependencies:
   flutter_share: ^2.0.0
   flutter_credit_card: ^3.0.3
   http: ^0.13.5
+  card_swiper: ^2.0.4
+  decorated_icon: ^1.2.1
 
 
 dev_dependencies:
