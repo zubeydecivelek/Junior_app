@@ -201,7 +201,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Container(
-              height: height * 0.45,
+              height: height * 0.5,
               //width: width*0.6,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -394,7 +394,7 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Container(
-              height: height * 0.45,
+              height: height * 0.5,
               child: PageView.builder(
                   controller: PageController(viewportFraction: 0.7),
                   itemCount: tomorrowLecture.length,
