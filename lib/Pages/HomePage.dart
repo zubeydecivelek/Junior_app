@@ -1,7 +1,17 @@
+import 'package:card_swiper/card_swiper.dart';
+import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
+import 'package:juniorapp/Models/LectureModel.dart';
 import 'package:juniorapp/Models/VideoItemModel.dart';
 import 'package:juniorapp/Pages/VideoPlayerPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:juniorapp/Services/lectureService.dart';
+import 'package:intl/intl.dart';
+
+import '../Services/videoService.dart';
+import 'LecturesPage.dart';
+import 'detailsLecturePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,51 +22,69 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _index = 1;
+  List<LectureModel> lectureModels = [];
+  List<LectureModel> todayLecture = [];
+  List<LectureModel> tomorrowLecture = [];
+
+  NumberFormat formatter = NumberFormat("00");
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<String> photos = [];
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fmandala.jpeg?alt=media&token=583b345e-b985-46e7-86e4-47ac41e30dc3");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fe-nab%C4%B1z.jpeg?alt=media&token=ba9a3d7a-cbfb-4828-8124-f7690ae9ec5b");
-
-    VideoItemModel video = VideoItemModel(headline: "BİLGİ YARIŞMASI", owner: "JUNIORAPP", photoLink: "https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c", videoLink: "https://www.youtube.com/watch?v=4_XmfYsCAmA");
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(width/6),
-        child: AppBar(
-          elevation: 0,
-          actions: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: IconButton(onPressed: (){}, icon: Icon(Icons.calendar_today_outlined,color: ColorPalette().blue,)),
-                ),
-              ],
-            )
-          ],
-          backgroundColor: ColorPalette().white,
-          leadingWidth: width,
-          leading: Column(
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Padding(padding: EdgeInsets.only(left: 15,), child: Text("Juniorapp", style: TextStyle(color: ColorPalette().blue,fontWeight: FontWeight.bold, fontSize: 24),),),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
+                    icon: Icon(
+                      Icons.calendar_today_outlined,
+                      color: ColorPalette().blue,
+                    )),
+              ),
             ],
-          ),
+          )
+        ],
+        backgroundColor: ColorPalette().white,
+        leadingWidth: width,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+                width: width,
+                height: width / 10,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: 15,
+                  ),
+                  child: Text(
+                    "Juniorapp",
+                    style: TextStyle(
+                        color: ColorPalette().blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: width / 18),
+                  ),
+                )),
+          ],
         ),
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         child: Column(
           children: [
-
             // InkWell(
             //   child: Container(
             //     height: 150,
@@ -84,76 +112,442 @@ class _HomePageState extends State<HomePage> {
 
             Container(
               height: 150,
-              width: width/1.1,
-              child: PageView.builder(
-                controller: PageController(viewportFraction: 0.7),
-                onPageChanged: (int index) => setState(() => _index = index),
-                itemCount: 3,
-                scrollDirection: Axis.horizontal,
-                physics: const PageScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return
-                    Transform.scale(
-                      scale: index == _index ? 1 : 0.9,
-                      child: Card(
-                        child: Stack(
+              width: width / 1.1,
+              child: FutureBuilder(
+                future: VideoService().getVideos(),
+                builder: ((context, AsyncSnapshot snap) {
+                  if (!snap.hasData) {
+                    return Center(
+                        child: Text(
+                      "Loading...",
+                      style: TextStyle(color: Colors.black26, fontSize: 25),
+                    ));
+                  } else {
+                    List<VideoItemModel> videoList = snap.data;
+                    return Swiper(
+                      itemCount: videoList.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
                           children: [
-                            Image.network(photos[index]),
-                            Positioned(left:(width-30)/3.3,top:60,child: Icon(Icons.play_circle_rounded, color: Colors.white,size: 30,))
+                            Image.network(videoList[index].photoLink),
+                            Positioned(
+                                top: 75 - (width / 26),
+                                right: width / 3.3,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VideoPlayerPage(
+                                                    video: videoList[index])));
+                                  },
+                                  child: DecoratedIcon(
+                                    Icons.play_circle,
+                                    color: Colors.white,
+                                    size: width / 13,
+                                    shadows: [
+                                      BoxShadow(
+                                          color: ColorPalette().grey,
+                                          blurRadius: 20,
+                                          spreadRadius: 0,
+                                          offset: Offset(0, 0)),
+                                    ],
+                                  ),
+                                ))
                           ],
-                        ),),
-                    )
-                  ;
-
-                },
+                        );
+                      },
+                      viewportFraction: 0.75,
+                      scale: 0.9,
+                    );
+                  }
+                }),
               ),
             ),
-
 
             ///TODO canlı diye bir row daha olmalı
             ///ama o firebaseden çekerken yapılır
 
-            Padding(padding: EdgeInsets.all(20),
+            Padding(
+              padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Text("Bugün", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: ColorPalette().grey),),
-                  Text("Tümünü Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),)
+                  Text(
+                    "Bugün",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().grey),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
+                    child: Text(
+                      "Tümünü Gör",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: ColorPalette().blue),
+                    ),
+                  )
                 ],
               ),
             ),
 
+            Container(
+              height: height * 0.45,
+              //width: width*0.6,
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("lectures")
+                    .snapshots(),
+                builder: ((BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                        child: Text(
+                      "Loading...",
+                      style: TextStyle(color: Colors.black26, fontSize: 25),
+                    ));
+                  } else {
+                    //QuerySnapshot querySnapshot = snapshot.data.docs;
+                    List<QueryDocumentSnapshot> query = snapshot.data!.docs;
+                    lectureModels = [];
+                    todayLecture = [];
+                    tomorrowLecture = [];
+                    for (int i = 0; i < query.length; i++) {
+                      DocumentSnapshot lectureDoc = query[i];
+                      LectureModel lectureModel =
+                          LectureModel.fromSnapshot(lectureDoc);
+                      lectureModels.add(lectureModel);
+                      int result = controlDate(lectureModel.time.toDate());
+                      if (result == 0) {
+                        todayLecture.add(lectureModel);
+                      } else if (result == 1) {
+                        tomorrowLecture.add(lectureModel);
+                      }
+                    }
 
+                    lectureModels.sort((a, b) => a.time.compareTo(b.time));
+                    todayLecture.sort((a, b) => a.time.compareTo(b.time));
+                    tomorrowLecture.sort((a, b) => a.time.compareTo(b.time));
+                    return PageView.builder(
+                        controller: PageController(viewportFraction: 0.7),
+                        itemCount: todayLecture.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: const PageScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Card(
+                              elevation: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: height * 0.2,
+                                    //width: width*0.6,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          todayLecture[index].imageLink),
+                                    )),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          size: 25,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            formatter.format(todayLecture[index]
+                                                    .time
+                                                    .toDate()
+                                                    .hour) +
+                                                ":" +
+                                                formatter.format(
+                                                    todayLecture[index]
+                                                        .time
+                                                        .toDate()
+                                                        .minute),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      todayLecture[index].title,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 8, 0, 10),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: width * 0.08,
+                                          width: width * 0.08,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(todayLecture[
+                                                            index]
+                                                        .publishedByNameAndPP[
+                                                    "ppLink"]!)),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            todayLecture[index]
+                                                .publishedByNameAndPP["Name"]!,
+                                            style: TextStyle(fontSize: 17),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Center(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: ColorPalette().blue,
+                                        shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailsLecturePage(
+                                                      lectureObj:
+                                                          todayLecture[index],
+                                                    )));
+                                      },
+                                      child: Text("DETAYLARI GÖR"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        });
+                  }
+                }),
+              ),
+            ),
 
-            Center(child: Container(width: width-50,height: 150,color: Colors.blue,)),
-
-
-
-            Padding(padding: EdgeInsets.all(20),
+            Padding(
+              padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Text("Yarın", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: ColorPalette().grey),),
-                  Text("Tümünü Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),)
+                  Text(
+                    "Yarın",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().grey),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
+                    child: Text(
+                      "Tümünü Gör",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: ColorPalette().blue),
+                    ),
+                  )
                 ],
               ),
             ),
 
-
-
-            Center(child: Container(width: width-50,height: 150,color: Colors.blue,)),
-
-
+            Container(
+              height: height * 0.45,
+              child: PageView.builder(
+                  controller: PageController(viewportFraction: 0.7),
+                  itemCount: tomorrowLecture.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const PageScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Card(
+                        elevation: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: height * 0.2,
+                              //width: width*0.6,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    tomorrowLecture[index].imageLink),
+                              )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 25,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      formatter.format(tomorrowLecture[index]
+                                              .time
+                                              .toDate()
+                                              .hour) +
+                                          ":" +
+                                          formatter.format(
+                                              tomorrowLecture[index]
+                                                  .time
+                                                  .toDate()
+                                                  .minute),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                tomorrowLecture[index].title,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 8, 0, 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: width * 0.08,
+                                    width: width * 0.08,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                              tomorrowLecture[index]
+                                                      .publishedByNameAndPP[
+                                                  "ppLink"]!)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      tomorrowLecture[index]
+                                          .publishedByNameAndPP["Name"]!,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorPalette().blue,
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DetailsLecturePage(
+                                            lectureObj: tomorrowLecture[index],
+                                          )));
+                                },
+                                child: Text("DETAYLARI GÖR"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
 
             Padding(
               padding: const EdgeInsets.all(50.0),
-              child: Center(child: Text("Tüm Dersleri Gör", style: TextStyle(decoration: TextDecoration.underline,fontSize: 15,fontWeight: FontWeight.bold,color: ColorPalette().blue),),),
+              child: Center(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LecturesPage(
+                              lectureList: lectureModels,
+                            )));
+                  },
+                  child: Text(
+                    "Tüm Dersleri Gör",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().blue),
+                  ),
+                ),
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  /// today = 0, tomorrow = 1
+  int controlDate(DateTime date) {
+    DateTime today = DateTime.now();
+    DateTime tomorrow = today.add(Duration(days: 1));
+    if (date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day) {
+      return 0;
+    } else if (date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day) {
+      return 1;
+    }
+    return -1;
   }
 }

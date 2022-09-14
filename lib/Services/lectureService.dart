@@ -56,9 +56,11 @@ class LectureService{
       "imageLink":imageURL,
       "time": time,
       "title":title,
-      "publishedBy": "${user.name} ${user.surname}",
+      "publishedByNameAndPP": {"Name":"${user.name} ${user.surname}","ppLink": user.ppLink},
       "statement": statement,
       "requirements":requirements,
+      "liveVideoLink": "liveVideoLink",
+      "isStreaming":false,
     }).then((value) async{
       await lectures.doc(value.id).update({"lectureID": value.id});
     });

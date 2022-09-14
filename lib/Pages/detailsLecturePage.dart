@@ -59,27 +59,6 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                 ),
               ),
             ),
-<<<<<<< Updated upstream
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text("${widget.lectureObj.time.toDate().hour}:${widget.lectureObj.time.toDate().minute}"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text("${widget.lectureObj.title}"),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    height: 40,width: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(30),
-                      image: DecorationImage(
-                        image: NetworkImage(widget.lectureObj.publishedBy.ppLink),
-=======
 
             Container(
               width: MediaQuery.of(context).size.width*0.9,
@@ -106,7 +85,6 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                             ),
                           ),
                         ),
->>>>>>> Stashed changes
                       ),
                       Text(widget.lectureObj.publishedByNameAndPP["Name"]!,),
                     ],
@@ -117,20 +95,6 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                       child:  Text(widget.lectureObj.statement),
                     ),
                   ),
-<<<<<<< Updated upstream
-                ),
-                Text("${widget.lectureObj.publishedBy.name} ${widget.lectureObj.publishedBy.surname}"),
-              ],
-            ),
-            Divider(
-              height: 1,
-              color: Colors.black,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  child:  Text(widget.lectureObj.statement),
-=======
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0,top: 10),
                     child: Text("Gereklilikler",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17),),
@@ -142,7 +106,6 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                     ),
                   ),
                 ],
->>>>>>> Stashed changes
               ),
             ),
           ],
