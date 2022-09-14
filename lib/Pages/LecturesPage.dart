@@ -17,10 +17,7 @@ class _LecturesPageState extends State<LecturesPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios,color: ColorPalette().blue,),
-          onTap: (){
-            Navigator.of(context).pop();
-
-          },
+          onTap: (){},
         ),
         title: Text("Tüm Dersler",style: TextStyle(color: ColorPalette().blue,),),
         centerTitle: true,
