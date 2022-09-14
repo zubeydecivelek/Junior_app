@@ -19,8 +19,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    List<String> photos = [];
+    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c");
+    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fmandala.jpeg?alt=media&token=583b345e-b985-46e7-86e4-47ac41e30dc3");
+    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fe-nab%C4%B1z.jpeg?alt=media&token=ba9a3d7a-cbfb-4828-8124-f7690ae9ec5b");
+
+    VideoItemModel video = VideoItemModel(headline: "BİLGİ YARIŞMASI", owner: "JUNIORAPP", photoLink: "https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c", videoLink: "https://www.youtube.com/watch?v=4_XmfYsCAmA");
 
     return Scaffold(
       backgroundColor: Colors.white,
