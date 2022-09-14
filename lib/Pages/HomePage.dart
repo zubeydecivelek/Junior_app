@@ -10,6 +10,8 @@ import 'package:juniorapp/Services/lectureService.dart';
 import 'package:intl/intl.dart';
 
 import '../Services/videoService.dart';
+import 'LecturesPage.dart';
+import 'detailsLecturePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,15 +30,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<String> photos = [];
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fmandala.jpeg?alt=media&token=583b345e-b985-46e7-86e4-47ac41e30dc3");
-    photos.add("https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fe-nab%C4%B1z.jpeg?alt=media&token=ba9a3d7a-cbfb-4828-8124-f7690ae9ec5b");
-
-    VideoItemModel video = VideoItemModel(headline: "BİLGİ YARIŞMASI", owner: "JUNIORAPP", photoLink: "https://firebasestorage.googleapis.com/v0/b/juniorapp-99648.appspot.com/o/videoPP%2Fbilgi.jpeg?alt=media&token=73c36225-d836-46e8-ba1d-8a47841eb28c", videoLink: "https://www.youtube.com/watch?v=4_XmfYsCAmA");
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -49,7 +44,12 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
                     icon: Icon(
                       Icons.calendar_today_outlined,
                       color: ColorPalette().blue,
@@ -112,7 +112,6 @@ class _HomePageState extends State<HomePage> {
 
             Container(
               height: 150,
-
               width: width / 1.1,
               child: FutureBuilder(
                 future: VideoService().getVideos(),
@@ -125,35 +124,44 @@ class _HomePageState extends State<HomePage> {
                     ));
                   } else {
                     List<VideoItemModel> videoList = snap.data;
-                    return Swiper(itemCount: videoList.length,
-                  itemBuilder: (context, index) {
-                  return
-                  Stack(
-                  children: [
-                  Image.network(videoList[index].photoLink),
-                  Positioned(top: 75-(width/26),right: width/3.3,child: DecoratedIcon(
-                  Icons.play_circle,
-                  color: Colors.white,
-                  size: width/13,
-                  shadows: [
-                  BoxShadow(
-                  color: ColorPalette().grey,
-                  blurRadius: 20,
-                  spreadRadius: 0,
-                  offset: Offset(0, 0)
-                  ),
-                  ],
-                  ))
-                  ],
-                  );
-                  },
-                  viewportFraction: 0.75,
-                  scale: 0.9,
-
-                  );
+                    return Swiper(
+                      itemCount: videoList.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            Image.network(videoList[index].photoLink),
+                            Positioned(
+                                top: 75 - (width / 26),
+                                right: width / 3.3,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VideoPlayerPage(
+                                                    video: videoList[index])));
+                                  },
+                                  child: DecoratedIcon(
+                                    Icons.play_circle,
+                                    color: Colors.white,
+                                    size: width / 13,
+                                    shadows: [
+                                      BoxShadow(
+                                          color: ColorPalette().grey,
+                                          blurRadius: 20,
+                                          spreadRadius: 0,
+                                          offset: Offset(0, 0)),
+                                    ],
+                                  ),
+                                ))
+                          ],
+                        );
+                      },
+                      viewportFraction: 0.75,
+                      scale: 0.9,
+                    );
                   }
                 }),
-
               ),
             ),
 
@@ -172,24 +180,33 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         color: ColorPalette().grey),
                   ),
-                  Text(
-                    "Tümünü Gör",
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: ColorPalette().blue),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
+                    child: Text(
+                      "Tümünü Gör",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: ColorPalette().blue),
+                    ),
                   )
                 ],
               ),
             ),
 
             Container(
-              height: height*0.45,
+              height: height * 0.45,
               //width: width*0.6,
               child: StreamBuilder(
-                stream:
-                    FirebaseFirestore.instance.collection("lectures").snapshots(),
+                stream: FirebaseFirestore.instance
+                    .collection("lectures")
+                    .snapshots(),
                 builder: ((BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
@@ -234,52 +251,81 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    height:height*0.2,
+                                    height: height * 0.2,
                                     //width: width*0.6,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(todayLecture[index].imageLink),
-                                        )
-                                    ),
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          todayLecture[index].imageLink),
+                                    )),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8),
                                     child: Row(
-                                      children: [Icon(Icons.access_time,size: 25,),
+                                      children: [
+                                        Icon(
+                                          Icons.access_time,
+                                          size: 25,
+                                        ),
                                         Padding(
-                                          padding: const EdgeInsets.only(left:8.0),
-                                          child: Text(formatter.format(todayLecture[index].time.toDate().hour)+ ":"+ formatter.format(todayLecture[index].time.toDate().minute)  ,style: TextStyle(color: Colors.black,fontSize: 18),),
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            formatter.format(todayLecture[index]
+                                                    .time
+                                                    .toDate()
+                                                    .hour) +
+                                                ":" +
+                                                formatter.format(
+                                                    todayLecture[index]
+                                                        .time
+                                                        .toDate()
+                                                        .minute),
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 18),
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left:10.0),
-                                    child: Text(todayLecture[index].title,
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      todayLecture[index].title,
                                       style: TextStyle(
-                                          fontSize:18 ,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(5,8,0,10),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 8, 0, 10),
                                     child: Row(
                                       children: [
                                         Container(
-                                          height: width*0.08,
-                                          width: width*0.08,
+                                          height: width * 0.08,
+                                          width: width * 0.08,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: NetworkImage(todayLecture[index].publishedByNameAndPP["ppLink"]!)),
+                                                image: NetworkImage(todayLecture[
+                                                            index]
+                                                        .publishedByNameAndPP[
+                                                    "ppLink"]!)),
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 8.0),
-                                          child: Text(todayLecture[index].publishedByNameAndPP["Name"]!, style: TextStyle(fontSize: 17),),
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            todayLecture[index]
+                                                .publishedByNameAndPP["Name"]!,
+                                            style: TextStyle(fontSize: 17),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -289,12 +335,18 @@ class _HomePageState extends State<HomePage> {
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: ColorPalette().blue,
                                         shape: new RoundedRectangleBorder(
-                                          borderRadius: new BorderRadius.circular(30.0),
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0),
                                         ),
                                       ),
                                       onPressed: () {
-
-
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailsLecturePage(
+                                                      lectureObj:
+                                                          todayLecture[index],
+                                                    )));
                                       },
                                       child: Text("DETAYLARI GÖR"),
                                     ),
@@ -321,20 +373,28 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                         color: ColorPalette().grey),
                   ),
-                  Text(
-                    "Tümünü Gör",
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: ColorPalette().blue),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LecturesPage(
+                                lectureList: lectureModels,
+                              )));
+                    },
+                    child: Text(
+                      "Tümünü Gör",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: ColorPalette().blue),
+                    ),
                   )
                 ],
               ),
             ),
 
             Container(
-              height: height*0.45,
+              height: height * 0.45,
               child: PageView.builder(
                   controller: PageController(viewportFraction: 0.7),
                   itemCount: tomorrowLecture.length,
@@ -349,52 +409,76 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              height:height*0.2,
+                              height: height * 0.2,
                               //width: width*0.6,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(tomorrowLecture[index].imageLink),
-                                  )
-                              ),
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    tomorrowLecture[index].imageLink),
+                              )),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Row(
-                                children: [Icon(Icons.access_time,size: 25,),
+                                children: [
+                                  Icon(
+                                    Icons.access_time,
+                                    size: 25,
+                                  ),
                                   Padding(
-                                    padding: const EdgeInsets.only(left:8.0),
-                                    child: Text(formatter.format(tomorrowLecture[index].time.toDate().hour)+ ":"+ formatter.format(tomorrowLecture[index].time.toDate().minute)  ,style: TextStyle(color: Colors.black,fontSize: 18),),
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      formatter.format(tomorrowLecture[index]
+                                              .time
+                                              .toDate()
+                                              .hour) +
+                                          ":" +
+                                          formatter.format(
+                                              tomorrowLecture[index]
+                                                  .time
+                                                  .toDate()
+                                                  .minute),
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 18),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left:10.0),
-                              child: Text(tomorrowLecture[index].title,
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                tomorrowLecture[index].title,
                                 style: TextStyle(
-                                    fontSize:18 ,
-                                    fontWeight: FontWeight.bold),
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(5,8,0,10),
+                              padding: const EdgeInsets.fromLTRB(5, 8, 0, 10),
                               child: Row(
                                 children: [
                                   Container(
-                                    height: width*0.08,
-                                    width: width*0.08,
+                                    height: width * 0.08,
+                                    width: width * 0.08,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           fit: BoxFit.cover,
-                                          image: NetworkImage(tomorrowLecture[index].publishedByNameAndPP["ppLink"]!)),
+                                          image: NetworkImage(
+                                              tomorrowLecture[index]
+                                                      .publishedByNameAndPP[
+                                                  "ppLink"]!)),
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(tomorrowLecture[index].publishedByNameAndPP["Name"]!, style: TextStyle(fontSize: 17),),
+                                    child: Text(
+                                      tomorrowLecture[index]
+                                          .publishedByNameAndPP["Name"]!,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -404,12 +488,15 @@ class _HomePageState extends State<HomePage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: ColorPalette().blue,
                                   shape: new RoundedRectangleBorder(
-                                    borderRadius: new BorderRadius.circular(30.0),
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0),
                                   ),
                                 ),
                                 onPressed: () {
-
-
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DetailsLecturePage(
+                                            lectureObj: tomorrowLecture[index],
+                                          )));
                                 },
                                 child: Text("DETAYLARI GÖR"),
                               ),
@@ -424,13 +511,21 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(50.0),
               child: Center(
-                child: Text(
-                  "Tüm Dersleri Gör",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: ColorPalette().blue),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LecturesPage(
+                              lectureList: lectureModels,
+                            )));
+                  },
+                  child: Text(
+                    "Tüm Dersleri Gör",
+                    style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().blue),
+                  ),
                 ),
               ),
             )
