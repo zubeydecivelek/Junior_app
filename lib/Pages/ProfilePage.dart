@@ -126,14 +126,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          IconButton(icon: Icon(Icons.add_box_outlined,), onPressed: () {
-                            //TODO avantaj ekle
-                            ///İPTAL
-                          },),
-                          IconButton(icon: Icon(Icons.video_call_outlined), onPressed: () {
-                            //TODO ders ekle
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CreatingLecturePage()));
-                          },),
+
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.indigoAccent,
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            onPressed: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context)=> CreatingLecturePage()));
+
+                            },
+                            child: Text("Ders Ekle"),
+                          ),
+
+
                         ],
                       ),
                     )

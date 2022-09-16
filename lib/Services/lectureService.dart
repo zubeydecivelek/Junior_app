@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:juniorapp/Models/UserModel.dart';
 import 'package:juniorapp/Services/authService.dart';
+import '../Models/LectureModel.dart';
 import '../Pages/RegisterPage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -50,7 +51,7 @@ class LectureService{
     return croppedphoto;
   }
 
-  Future createLecture(String imageURL, Timestamp time, String title,String statement,String requirements)async{
+  Future createLecture(String imageURL, Timestamp time, String title,String statement,String requirements, String liveVideoLink,int lectureMinutes)async{
     UserModel user = await AuthService().getMe();
     await lectures.add({
       "imageLink":imageURL,
@@ -59,11 +60,21 @@ class LectureService{
       "publishedByNameAndPP": {"Name":"${user.name} ${user.surname}","ppLink": user.ppLink},
       "statement": statement,
       "requirements":requirements,
-      "liveVideoLink": "liveVideoLink",
+      "liveVideoLink": liveVideoLink,
       "isStreaming":false,
+      "lectureMinute":lectureMinutes,
     }).then((value) async{
       await lectures.doc(value.id).update({"lectureID": value.id});
     });
 
+  }
+
+  Future updateLectureStream(LectureModel lecture)async{
+    lecture.isStreaming = !lecture.isStreaming;
+    await lectures.doc(lecture.lectureID).update({"isStreaming": lecture.isStreaming });
+  }
+
+  Future<void> deleteLecture(LectureModel lectureModel)async{
+    await lectures.doc(lectureModel.lectureID).delete();
   }
 }

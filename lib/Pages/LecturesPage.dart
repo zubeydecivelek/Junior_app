@@ -17,7 +17,9 @@ class _LecturesPageState extends State<LecturesPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios,color: ColorPalette().blue,),
-          onTap: (){},
+          onTap: (){
+            Navigator.of(context).pop();
+          },
         ),
         title: Text("Tüm Dersler",style: TextStyle(color: ColorPalette().blue,),),
         centerTitle: true,
@@ -33,6 +35,7 @@ class _LecturesPageState extends State<LecturesPage> {
                 itemBuilder: ((context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
+<<<<<<< Updated upstream
                     child: Material(
                       borderRadius: BorderRadius.circular(20),                      elevation: 6,
                       child: Container(
@@ -78,6 +81,75 @@ class _LecturesPageState extends State<LecturesPage> {
                                       image:NetworkImage(widget.lectureList[index].publishedByNameAndPP[
                                       "ppLink"]!),
                                     ),
+=======
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(dayTitle,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.black87),),
+                        Container(
+                          child: ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: selectedDay.length,
+                              itemBuilder: ((context,index){
+                                print("print title:${selectedDay[index].title}");
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: MediaQuery.of(context).size.height*0.12,
+                                        width: MediaQuery.of(context).size.width*0.4,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(selectedDay[index].imageLink),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(Icons.watch_later_outlined),
+                                                Text(" ${selectedDay[index].time.toDate().hour}:${selectedDay[index].time.toDate().minute}",style: TextStyle(fontWeight: FontWeight.bold),),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Text(selectedDay[index].title,style: TextStyle(fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  height: 25, width: 25,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    image: DecorationImage(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(selectedDay[
+                                                      index]
+                                                          .publishedByNameAndPP[
+                                                      "ppLink"]!)
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 4.0),
+                                                  child: Text(selectedDay[index]
+                                                      .publishedByNameAndPP["Name"]!,style: TextStyle(fontSize: 12),),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+>>>>>>> Stashed changes
                                   ),
                                 ),
                               ),

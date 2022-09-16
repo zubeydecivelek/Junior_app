@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/LectureModel.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
+
+
 class DetailsLecturePage extends StatefulWidget {
 DetailsLecturePage({required this.lectureObj});
    LectureModel lectureObj;
@@ -9,7 +15,48 @@ DetailsLecturePage({required this.lectureObj});
   State<DetailsLecturePage> createState() => _DetailsLecturePageState();
 }
 
+<<<<<<< Updated upstream
 class _DetailsLecturePageState extends State<DetailsLecturePage> {
+=======
+class _DetailsLecturePageState extends State<DetailsLecturePage> with SingleTickerProviderStateMixin {
+  late final Ticker _ticker;
+  String lectureday="day";
+  int result=0;
+  @override
+  void initState() {
+    result= controlDate(widget.lectureObj.time.toDate());
+    switch(result){
+      case 0:
+        lectureday="Bugün";
+        break;
+      case 1:
+        lectureday="Yarın";
+        break;
+      default:
+        lectureday="Hata";
+        break;
+    }
+    super.initState();
+
+    _ticker = createTicker((elapsed) {
+      // 4. update state
+      isLive();
+      setState(() {
+      });
+    });
+    // 5. start ticker
+    _ticker.start();
+  }
+
+
+
+  @override
+  void dispose() {
+    // 6. don't forget to dispose it
+    _ticker.dispose();
+    super.dispose();
+  }
+>>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +125,92 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
           ],
         ),
       ),
+<<<<<<< Updated upstream
 
     );
   }
+=======
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white54,
+        child: SizedBox(
+          height:70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("$lectureday",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                  Text("${widget.lectureObj.time.toDate().hour}:${widget.lectureObj.time.toDate().minute}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                ],
+              ),
+              SizedBox(
+                width: 180,
+                child: widget.lectureObj.isStreaming ?  ElevatedButton(
+                  child: Text("DERSE KATIL",style: TextStyle(fontSize: 12),),
+                  onPressed: ()async{
+
+                    await _launchInBrowser(widget.lectureObj.liveVideoLink);
+                  },
+                  style: ElevatedButton.styleFrom(backgroundColor: ColorPalette().blue,
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0),
+                    ),
+                  ),
+                ): Container(
+                  height: 35,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30.0),
+                    color: Color(0xFF9FA8DA),
+                  ),
+                  child: Center(
+                      child: Text(
+                        "DERSE KATIL",
+                        style: TextStyle(color: Colors.white,fontSize: 12),
+                      )),
+                ) ,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  /// today = 0, tomorrow = 1
+  int controlDate(DateTime date) {
+    DateTime today = DateTime.now();
+    DateTime tomorrow = today.add(Duration(days: 1));
+    if (date.year == today.year &&
+        date.month == today.month &&
+        date.day == today.day) {
+      return 0;
+    } else if (date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day) {
+      return 1;
+    }
+    return -1;
+  }
+
+  bool isLive(){
+    DateTime now = DateTime.now();
+    DateTime startLecture = widget.lectureObj.time.toDate();
+    DateTime endLecture = startLecture.add(Duration(minutes: widget.lectureObj.lectureMinute));
+    if((startLecture.compareTo(now)==-1||startLecture.compareTo(now)==0)&& (now.compareTo(endLecture)==-1||now.compareTo(endLecture)==0)){
+      widget.lectureObj.isStreaming=true;
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+>>>>>>> Stashed changes
 }
