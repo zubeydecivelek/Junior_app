@@ -335,13 +335,8 @@ class _HomePageState extends State<HomePage>  with SingleTickerProviderStateMixi
               ),
             ),
 
-<<<<<<< Updated upstream
-            Container(
-              height: height * 0.45,
-=======
             SizedBox(
                height:isToday? height * 0.5:height*0.05,
->>>>>>> Stashed changes
               //width: width*0.6,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -547,13 +542,8 @@ class _HomePageState extends State<HomePage>  with SingleTickerProviderStateMixi
               ),
             ),
 
-<<<<<<< Updated upstream
-            Container(
-              height: height * 0.45,
-=======
             if(tomorrowLecture.isNotEmpty)Container(
               height: height * 0.5,
->>>>>>> Stashed changes
               child: PageView.builder(
                   controller: PageController(viewportFraction: 0.7),
                   itemCount: tomorrowLecture.length,

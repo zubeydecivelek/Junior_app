@@ -10,6 +10,20 @@ class LecturesPage extends StatefulWidget {
   State<LecturesPage> createState() => _LecturesPageState();
 }
 class _LecturesPageState extends State<LecturesPage> {
+ List<LectureModel> monday= [];
+ List<LectureModel> tuesday = [];
+ List<LectureModel> wednesday = [];
+ List<LectureModel> thursday = [];
+ List<LectureModel> friday = [];
+ List<LectureModel> saturday = [];
+ List<LectureModel> sunday = [];
+ List<LectureModel> selectedDay = [];
+ String dayTitle="";
+  @override
+  void initState() {
+    dayClassification(widget.lectureList);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,57 +45,13 @@ class _LecturesPageState extends State<LecturesPage> {
             ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: widget.lectureList.length,
+              itemCount: 7,
                 itemBuilder: ((context, index) {
+                 daySelection(index);
+                 dayTitleSelection(index);
+                 print("buraya geld..selected day:$selectedDay,$index");
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-<<<<<<< Updated upstream
-                    child: Material(
-                      borderRadius: BorderRadius.circular(20),                      elevation: 6,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height*0.5,
-                      decoration: BoxDecoration(
-
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height*0.2,
-                            child: Center(child: Text("GORSEL")),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                  topRight:Radius.circular(20),
-                                  topLeft:Radius.circular(20) ),
-                           image: DecorationImage(
-                             fit: BoxFit.cover,
-                             image: NetworkImage(widget.lectureList[index].imageLink),
-                           ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text("${widget.lectureList[index].time.toDate().hour}:${widget.lectureList[index].time.toDate().minute}",style: TextStyle(fontSize: 17),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text("${widget.lectureList[index].title}",style: TextStyle(fontSize: 25),),
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 35,width: 35,
-                                  child: Center(child: Text("PP")),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(30),
-                                    image: DecorationImage(
-                                      image:NetworkImage(widget.lectureList[index].publishedByNameAndPP[
-                                      "ppLink"]!),
-                                    ),
-=======
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -149,29 +119,11 @@ class _LecturesPageState extends State<LecturesPage> {
                                         ),
                                       ),
                                     ],
->>>>>>> Stashed changes
                                   ),
-                                ),
-                              ),
-                              Text(widget.lectureList[index].publishedByNameAndPP["Name"]!,style: TextStyle(fontSize: 15),),
-                            ],
-                          ),
-                          Center(
-                            child: ElevatedButton(
-                                onPressed: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DetailsLecturePage(lectureObj: widget.lectureList[index],)));
-                                },
-                                child: Text("Detayları Gör",style: TextStyle(fontWeight: FontWeight.bold),),
-                              style: ElevatedButton.styleFrom(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      ),
+                                );
+                          })),
+                        ),
+                      ],
                     ),
                   );
                 }),
@@ -182,5 +134,58 @@ class _LecturesPageState extends State<LecturesPage> {
         ),
       ),
     );
+  }
+  void dayClassification(List<LectureModel> lectureList){
+    for(LectureModel lectureObj in lectureList){
+      print("lectureobjenin weekday degeri:${lectureObj.time.toDate().weekday}");
+      switch(lectureObj.time.toDate().weekday){
+        case 1:
+          monday.add(lectureObj);
+          break;
+        case 2:
+          tuesday.add(lectureObj);
+          break;
+        case 3:
+          wednesday.add(lectureObj);
+          break;
+        case 4:
+          thursday.add(lectureObj);
+          break;
+        case 5:
+          friday.add(lectureObj);
+          break;
+        case 6:
+          saturday.add(lectureObj);
+          break;
+        case 7:
+          sunday.add(lectureObj);
+          break;
+
+
+      }
+    }
+
+  }
+  void daySelection(int index){
+    switch(index){
+      case 0: selectedDay=monday; break;
+      case 1: selectedDay=tuesday; break;
+      case 2: selectedDay=wednesday; break;
+      case 3: selectedDay=thursday; break;
+      case 4: selectedDay=friday; break;
+      case 5: selectedDay=saturday; break;
+      case 6: selectedDay=sunday; break;
+    }
+  }
+  void dayTitleSelection(int index){
+    switch(index){
+      case 0: dayTitle="Pazartesi"; break;
+      case 1:dayTitle="Salı"; break;
+      case 2: dayTitle="Çarşamba"; break;
+      case 3: dayTitle="Perşembe"; break;
+      case 4: dayTitle="Cuma"; break;
+      case 5: dayTitle="Cumartesi"; break;
+      case 6: dayTitle="Pazar"; break;
+    }
   }
 }
