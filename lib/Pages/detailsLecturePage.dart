@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/LectureModel.dart';
+import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:async';
+
+
 class DetailsLecturePage extends StatefulWidget {
   DetailsLecturePage({required this.lectureObj});
   LectureModel lectureObj;
@@ -9,7 +15,8 @@ class DetailsLecturePage extends StatefulWidget {
   State<DetailsLecturePage> createState() => _DetailsLecturePageState();
 }
 
-class _DetailsLecturePageState extends State<DetailsLecturePage> {
+class _DetailsLecturePageState extends State<DetailsLecturePage> with SingleTickerProviderStateMixin {
+  late final Ticker _ticker;
   String lectureday="day";
   int result=0;
   @override
@@ -27,6 +34,24 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
         break;
     }
     super.initState();
+
+    _ticker = createTicker((elapsed) {
+      // 4. update state
+      isLive();
+      setState(() {
+      });
+    });
+    // 5. start ticker
+    _ticker.start();
+  }
+
+
+
+  @override
+  void dispose() {
+    // 6. don't forget to dispose it
+    _ticker.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -134,7 +159,10 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
                 width: 180,
                 child: widget.lectureObj.isStreaming ?  ElevatedButton(
                   child: Text("DERSE KATIL",style: TextStyle(fontSize: 12),),
-                  onPressed: (){},
+                  onPressed: ()async{
+
+                    await _launchInBrowser(widget.lectureObj.liveVideoLink);
+                  },
                   style: ElevatedButton.styleFrom(backgroundColor: ColorPalette().blue,
                     shape: new RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(30.0),
@@ -173,5 +201,26 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> {
       return 1;
     }
     return -1;
+  }
+
+  bool isLive(){
+    DateTime now = DateTime.now();
+    DateTime startLecture = widget.lectureObj.time.toDate();
+    DateTime endLecture = startLecture.add(Duration(minutes: widget.lectureObj.lectureMinute));
+    if((startLecture.compareTo(now)==-1||startLecture.compareTo(now)==0)&& (now.compareTo(endLecture)==-1||now.compareTo(endLecture)==0)){
+      widget.lectureObj.isStreaming=true;
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    Uri uri = Uri.parse(url);
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
   }
 }

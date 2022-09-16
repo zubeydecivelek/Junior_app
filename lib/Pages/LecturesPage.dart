@@ -31,7 +31,9 @@ class _LecturesPageState extends State<LecturesPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios,color: ColorPalette().blue,),
-          onTap: (){},
+          onTap: (){
+            Navigator.of(context).pop();
+          },
         ),
         title: Text("Tüm Dersler",style: TextStyle(color: ColorPalette().blue,),),
         centerTitle: true,
@@ -69,7 +71,7 @@ class _LecturesPageState extends State<LecturesPage> {
                                         height: MediaQuery.of(context).size.height*0.12,
                                         width: MediaQuery.of(context).size.width*0.4,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10), 
+                                          borderRadius: BorderRadius.circular(10),
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(selectedDay[index].imageLink),
@@ -99,14 +101,17 @@ class _LecturesPageState extends State<LecturesPage> {
                                                     borderRadius: BorderRadius.circular(30),
                                                     image: DecorationImage(
                                                       fit: BoxFit.cover,
-                                                      image: NetworkImage(
-                                                          selectedDay[index].imageLink),
+                                                      image: NetworkImage(selectedDay[
+                                                      index]
+                                                          .publishedByNameAndPP[
+                                                      "ppLink"]!)
                                                     ),
                                                   ),
                                                 ),
                                                 Padding(
                                                   padding: const EdgeInsets.only(left: 4.0),
-                                                  child: Text("publishedbyName",style: TextStyle(fontSize: 12),),
+                                                  child: Text(selectedDay[index]
+                                                      .publishedByNameAndPP["Name"]!,style: TextStyle(fontSize: 12),),
                                                 ),
                                               ],
                                             ),

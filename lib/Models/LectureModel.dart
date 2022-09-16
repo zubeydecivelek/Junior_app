@@ -12,9 +12,10 @@ class LectureModel{
   String requirements;
   String liveVideoLink;
   bool isStreaming;
+  int lectureMinute;
 
   LectureModel(this.lectureID, this.imageLink, this.time, this.title, this.publishedByNameAndPP,
-      this.statement, this.requirements,this.liveVideoLink,this.isStreaming);
+      this.statement, this.requirements,this.liveVideoLink,this.isStreaming,this.lectureMinute);
 
   factory LectureModel.fromSnapshot(DocumentSnapshot doc){
     return LectureModel(
@@ -27,6 +28,7 @@ class LectureModel{
       doc["requirements"],//
       doc["liveVideoLink"],//
       doc["isStreaming"],//
+      doc["lectureMinute"],
     );
   }
 }

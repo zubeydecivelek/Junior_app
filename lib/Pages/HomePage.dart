@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:card_swiper/card_swiper.dart';
 import 'package:decorated_icon/decorated_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/LectureModel.dart';
 import 'package:juniorapp/Models/VideoItemModel.dart';
@@ -20,18 +23,43 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>  with SingleTickerProviderStateMixin {
+
+  late final Ticker _ticker;
   int _index = 1;
   List<LectureModel> lectureModels = [];
   List<LectureModel> todayLecture = [];
   List<LectureModel> tomorrowLecture = [];
+  List<LectureModel> nowLecture = [];
+  bool isToday=true;
 
   NumberFormat formatter = NumberFormat("00");
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = createTicker((elapsed) {
+      // 4. update state
+      print("canlı listee: $nowLecture");
+      setState(() {
+      });
+    });
+    // 5. start ticker
+    _ticker.start();
+  }
+
+  @override
+  void dispose() {
+    // 6. don't forget to dispose it
+    _ticker.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -44,11 +72,11 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await controlLecturesTime();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LecturesPage(
-                                lectureList: lectureModels,
-                              )));
+                            lectureList: lectureModels,)));
                     },
                     icon: Icon(
                       Icons.calendar_today_outlined,
@@ -167,8 +195,114 @@ class _HomePageState extends State<HomePage> {
 
             ///TODO canlı diye bir row daha olmalı
             ///ama o firebaseden çekerken yapılır
+            if(nowLecture.isNotEmpty)Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Canlı",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ColorPalette().grey),
+                  ),
+                ],
+              ),
+            ),
 
-            Padding(
+            if(nowLecture.isNotEmpty)Container(
+              height: height * 0.5,
+              child: PageView.builder(
+                  controller: PageController(viewportFraction: 0.7),
+                  itemCount: nowLecture.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const PageScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Card(
+                        elevation: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: height * 0.2,
+                              //width: width*0.6,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        nowLecture[index].imageLink),
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Icon(Icons.stream,color: Colors.red,),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                nowLecture[index].title,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(5, 8, 0, 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: width * 0.08,
+                                    width: width * 0.08,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                              nowLecture[index]
+                                                  .publishedByNameAndPP[
+                                              "ppLink"]!)),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      nowLecture[index]
+                                          .publishedByNameAndPP["Name"]!,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Center(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: ColorPalette().blue,
+                                  shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                    new BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DetailsLecturePage(
+                                        lectureObj: nowLecture[index],
+                                      )));
+                                },
+                                child: Text("DETAYLARI GÖR"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+
+            if(todayLecture.isNotEmpty)Padding(
               padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -181,7 +315,8 @@ class _HomePageState extends State<HomePage> {
                         color: ColorPalette().grey),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
+                      await controlLecturesTime();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LecturesPage(
                                 lectureList: lectureModels,
@@ -200,8 +335,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            Container(
-              height: height * 0.5,
+            SizedBox(
+               height:isToday? height * 0.5:height*0.05,
               //width: width*0.6,
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -218,31 +353,43 @@ class _HomePageState extends State<HomePage> {
                   } else {
                     //QuerySnapshot querySnapshot = snapshot.data.docs;
                     List<QueryDocumentSnapshot> query = snapshot.data!.docs;
+
                     lectureModels = [];
                     todayLecture = [];
                     tomorrowLecture = [];
+                    nowLecture = [];
                     for (int i = 0; i < query.length; i++) {
                       DocumentSnapshot lectureDoc = query[i];
                       LectureModel lectureModel =
                           LectureModel.fromSnapshot(lectureDoc);
-                      lectureModels.add(lectureModel);
+
                       int result = controlDate(lectureModel.time.toDate());
+                      bool isLectureLive = isLive(lectureModel);
                       if (result == 0) {
                         todayLecture.add(lectureModel);
                       } else if (result == 1) {
                         tomorrowLecture.add(lectureModel);
+                      }if(isLectureLive){
+                        lectureModel.isStreaming=true;
+                        nowLecture.add(lectureModel);
                       }
+                      lectureModels.add(lectureModel);
                     }
-
+                    controlLecturesTime();
                     lectureModels.sort((a, b) => a.time.compareTo(b.time));
                     todayLecture.sort((a, b) => a.time.compareTo(b.time));
                     tomorrowLecture.sort((a, b) => a.time.compareTo(b.time));
+
+                    if (todayLecture.isEmpty){
+                        isToday=false;
+                    }
                     return PageView.builder(
                         controller: PageController(viewportFraction: 0.7),
                         itemCount: todayLecture.length,
                         scrollDirection: Axis.horizontal,
                         physics: const PageScrollPhysics(),
                         itemBuilder: (context, index) {
+
                           return Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: Card(
@@ -347,7 +494,8 @@ class _HomePageState extends State<HomePage> {
                                                       lectureObj:
                                                           todayLecture[index],
                                                     )));
-                                      },
+
+                                        },
                                       child: Text("DETAYLARI GÖR"),
                                     ),
                                   ),
@@ -361,7 +509,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            Padding(
+            if(tomorrowLecture.isNotEmpty)Padding(
               padding: EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -374,7 +522,8 @@ class _HomePageState extends State<HomePage> {
                         color: ColorPalette().grey),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async{
+                      await controlLecturesTime();
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LecturesPage(
                                 lectureList: lectureModels,
@@ -393,7 +542,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            Container(
+            if(tomorrowLecture.isNotEmpty)Container(
               height: height * 0.5,
               child: PageView.builder(
                   controller: PageController(viewportFraction: 0.7),
@@ -512,7 +661,8 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(50.0),
               child: Center(
                 child: InkWell(
-                  onTap: () {
+                  onTap: ()async {
+                    await controlLecturesTime();
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => LecturesPage(
                               lectureList: lectureModels,
@@ -539,9 +689,7 @@ class _HomePageState extends State<HomePage> {
   int controlDate(DateTime date) {
     DateTime today = DateTime.now();
     DateTime tomorrow = today.add(Duration(days: 1));
-    if (date.year == today.year &&
-        date.month == today.month &&
-        date.day == today.day) {
+    if (date.year == today.year && date.month == today.month && date.day == today.day&& today.compareTo(date)==-1) {
       return 0;
     } else if (date.year == tomorrow.year &&
         date.month == tomorrow.month &&
@@ -549,5 +697,27 @@ class _HomePageState extends State<HomePage> {
       return 1;
     }
     return -1;
+  }
+
+  bool isLive(LectureModel lecture){
+    DateTime now = DateTime.now();
+    DateTime startLecture = lecture.time.toDate();
+    DateTime endLecture = startLecture.add(Duration(minutes: lecture.lectureMinute));
+    if((startLecture.compareTo(now)==-1||startLecture.compareTo(now)==0)&& (now.compareTo(endLecture)==-1||now.compareTo(endLecture)==0)){
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> controlLecturesTime()async{
+    DateTime dtNow= DateTime.now();
+    for (LectureModel lectureModel in lectureModels){
+      DateTime start = lectureModel.time.toDate();
+      DateTime end = start.add(Duration(minutes: lectureModel.lectureMinute));
+      if(end.compareTo(dtNow)==-1){
+        //lectureModels.remove(lectureModel);
+        await LectureService().deleteLecture(lectureModel);
+      }
+    }
   }
 }

@@ -18,6 +18,8 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
   DateTime dateTime = DateTime.now();
   dynamic file;
   final title = TextEditingController();
+  final lectureMinutes = TextEditingController();
+  final lectureLink = TextEditingController();
   final requirements = TextEditingController();
   final statement = TextEditingController();
   double screenHeight = 0;
@@ -63,7 +65,7 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
                   child: SizedBox(
                     height: screenHeight * 0.06,
                     width: screenWidth * 0.8,
-                    child: (picUrl=="" || title.text.isEmpty)
+                    child: (picUrl=="" || title.text.isEmpty || lectureLink.text.isEmpty||lectureMinutes.text.isEmpty)
                         ? Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.0),
@@ -71,7 +73,7 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
                       ),
                       child: Center(
                           child: Text(
-                            "Devam Et",
+                            "Yükle",
                             style: TextStyle(color: Colors.white),
                           )),
                     )
@@ -87,7 +89,7 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
                         try {
                           await LectureService().createLecture(
                               picUrl, Timestamp.fromDate(dateTime), title.text,
-                              statement.text, requirements.text);
+                              statement.text, requirements.text,lectureLink.text,int.parse(lectureMinutes.text));
                           showSnackBarText("Yükleme başarılı...");
 
                         }catch(e){
@@ -206,7 +208,20 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
                       );
                       setState(()=>dateTime=newDateTime);
                     },
-                  )
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width*0.15,child: const Text("Ders Süresi:",maxLines: 2,)),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width*0.14,
+                    child: TextField(
+                      controller: lectureMinutes,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        fillColor: Colors.grey[300],
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  Text("dk"),
                 ],
               ),
             ),
@@ -220,6 +235,21 @@ class _CreatingLecturePageState extends State<CreatingLecturePage> {
                 ),
                 TextField(
                   controller: title,
+                  decoration: InputDecoration(
+                    fillColor: Colors.grey[300],
+                    filled: true,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top:8.0),
+                  child: Text(
+                    "Ders Linki",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: ColorPalette().blue),
+                  ),
+                ),
+                TextField(
+                  controller: lectureLink,
                   decoration: InputDecoration(
                     fillColor: Colors.grey[300],
                     filled: true,
