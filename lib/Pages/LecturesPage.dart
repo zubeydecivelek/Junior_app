@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/LectureModel.dart';
 import 'package:juniorapp/Pages/detailsLecturePage.dart';
+
+//TODO FİLTRELEMEYİ SADECE GÜNE GÖRE DEGİL AYNI ZAMANDA AY VE YILA GÖRE DE DÜZENLE.
+//TODO objelerin timestampleri yanlış gösteriyor??? (14.35 i  11.35 gostermesi gibi.)
+
 class LecturesPage extends StatefulWidget {
   LecturesPage({required this.lectureList});
   List<LectureModel> lectureList;
@@ -19,9 +24,13 @@ class _LecturesPageState extends State<LecturesPage> {
  List<LectureModel> sunday = [];
  List<LectureModel> selectedDay = [];
  String dayTitle="";
+ int today=0;
+ int tomorrow=0;
   @override
   void initState() {
     dayClassification(widget.lectureList);
+    today=DateTime.now().weekday;
+    tomorrow=DateTime.now().add(Duration(days: 1)).weekday;
     super.initState();
   }
   @override
@@ -51,11 +60,11 @@ class _LecturesPageState extends State<LecturesPage> {
                  dayTitleSelection(index);
                  print("buraya geld..selected day:$selectedDay,$index");
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: (dayTitle=="") ? EdgeInsets.all(0) : EdgeInsets.all(8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(dayTitle,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.black87),),
+                        (dayTitle=="") ? SizedBox(height: 0,width: 0,): Text(dayTitle,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.black87),),
                         Container(
                           child: ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
@@ -63,7 +72,7 @@ class _LecturesPageState extends State<LecturesPage> {
                               itemCount: selectedDay.length,
                               itemBuilder: ((context,index){
                                 print("print title:${selectedDay[index].title}");
-                                return Padding(
+                                return (selectedDay[index].time.toDate().weekday<today)  ? Container() : Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     children: [
@@ -138,6 +147,7 @@ class _LecturesPageState extends State<LecturesPage> {
   void dayClassification(List<LectureModel> lectureList){
     for(LectureModel lectureObj in lectureList){
       print("lectureobjenin weekday degeri:${lectureObj.time.toDate().weekday}");
+      print("today..$today and tomorrow..$tomorrow");
       switch(lectureObj.time.toDate().weekday){
         case 1:
           monday.add(lectureObj);
@@ -178,14 +188,29 @@ class _LecturesPageState extends State<LecturesPage> {
     }
   }
   void dayTitleSelection(int index){
-    switch(index){
-      case 0: dayTitle="Pazartesi"; break;
-      case 1:dayTitle="Salı"; break;
-      case 2: dayTitle="Çarşamba"; break;
-      case 3: dayTitle="Perşembe"; break;
-      case 4: dayTitle="Cuma"; break;
-      case 5: dayTitle="Cumartesi"; break;
-      case 6: dayTitle="Pazar"; break;
+    if(index>today){
+      switch(index){
+        case 0: dayTitle="Pazartesi"; break;
+        case 1:dayTitle="Salı"; break;
+        case 2: dayTitle="Çarşamba"; break;
+        case 3: dayTitle="Perşembe"; break;
+        case 4: dayTitle="Cuma"; break;
+        case 5: dayTitle="Cumartesi"; break;
+        case 6: dayTitle="Pazar"; break;
+      }
+    }
+    else if((index+1)<today){
+        dayTitle="";
+    }
+   else if((index+1)>today && (index+1)==tomorrow){
+     dayTitle="Yarın";
+    }
+
+   else if((index+1)==today){
+     dayTitle="Bugün";
+     print("BURAYA BAKtoday..$today and tomorrow..$tomorrow");
+
     }
   }
+
 }

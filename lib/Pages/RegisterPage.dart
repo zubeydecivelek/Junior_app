@@ -360,17 +360,12 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
         ),
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
-              child: Text(
-                'Not: Başında "0" (sıfır) olmadan yaz',
-                maxLines: 1,
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 5, 15, 10),
+          child: Text(
+            'Not: Başında "0" (sıfır) olmadan yaz',
+            style: TextStyle(color: Colors.black, fontSize: 20),
+          ),
         ),
       ],
     );
