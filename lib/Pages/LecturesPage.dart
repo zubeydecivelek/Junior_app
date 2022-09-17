@@ -143,30 +143,35 @@ class _LecturesPageState extends State<LecturesPage> {
     for(LectureModel lectureObj in lectureList){
       print("lectureobjenin weekday degeri:${lectureObj.time.toDate().weekday}");
       print("today..$today and tomorrow..$tomorrow");
-      switch(lectureObj.time.toDate().weekday){
-        case 1:
-          monday.add(lectureObj);
-          break;
-        case 2:
-          tuesday.add(lectureObj);
-          break;
-        case 3:
-          wednesday.add(lectureObj);
-          break;
-        case 4:
-          thursday.add(lectureObj);
-          break;
-        case 5:
-          friday.add(lectureObj);
-          break;
-        case 6:
-          saturday.add(lectureObj);
-          break;
-        case 7:
-          sunday.add(lectureObj);
-          break;
-
-
+      if(
+      (lectureObj.time.toDate().year==DateTime.now().year) &&
+          ((lectureObj.time.toDate().month==DateTime.now().month) || ((lectureObj.time.toDate().month>=DateTime.now().month) && (lectureObj.time.toDate().day<=3))) &&
+          ((lectureObj.time.toDate().day==DateTime.now().day) || ((lectureObj.time.toDate().day>=DateTime.now().day) &&
+              (lectureObj.time.toDate().day<=DateTime.now().add(Duration(days: 2)).day))))
+      {
+        switch (lectureObj.time.toDate().weekday) {
+          case 1:
+            monday.add(lectureObj);
+            break;
+          case 2:
+            tuesday.add(lectureObj);
+            break;
+          case 3:
+            wednesday.add(lectureObj);
+            break;
+          case 4:
+            thursday.add(lectureObj);
+            break;
+          case 5:
+            friday.add(lectureObj);
+            break;
+          case 6:
+            saturday.add(lectureObj);
+            break;
+          case 7:
+            sunday.add(lectureObj);
+            break;
+        }
       }
     }
 
