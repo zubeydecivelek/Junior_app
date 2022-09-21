@@ -104,7 +104,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           return Container(
 
                             child: InkWell(
-                              onTap: (){InkwellFunctions(index,user);},
+                              onTap: ()async{
+                                InkwellFunctions(index,user);},
                               child: Row(
                                 children: [
                                   Padding(
@@ -155,10 +156,11 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void InkwellFunctions(int index,UserModel user) {
+  Future<void> InkwellFunctions(int index,UserModel user) async {
 
     switch (index) {
       case 0: {
+        await AuthService().controlSubscription();
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserModelInfo(user)));
       }break;
       case 1: {

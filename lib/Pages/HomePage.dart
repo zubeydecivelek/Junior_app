@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage>  with SingleTickerProviderStateMixi
     super.initState();
     _ticker = createTicker((elapsed) {
       // 4. update state
-      print("canlı listee: $nowLecture");
+      //print("canlı listee: $nowLecture");
       setState(() {
       });
     });

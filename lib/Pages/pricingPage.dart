@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Pages/HomePage.dart';
+import 'package:juniorapp/Pages/paymentPage.dart';
 import 'package:juniorapp/Services/authService.dart';
 
 class PricingPage extends StatefulWidget {
@@ -63,16 +64,20 @@ class _PricingPageState extends State<PricingPage> {
                               ),
                             ),
                             onPressed: () {
+                              int send = -1;
                               if (dailySelected) {
-                                AuthService().updateSubscription(1);
+                                send=1;
+                                //AuthService().updateSubscription(1);
                               } else if (weeklySelected) {
-                                AuthService().updateSubscription(2);
+                                send=2;
+                                //AuthService().updateSubscription(2);
                               } else if (monthlySelected) {
-                                AuthService().updateSubscription(3);
+                                send=3;
+                                //AuthService().updateSubscription(3);
                               }
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => HomePage(),
+                                  builder: (context) => PaymentPage(send),
                                 ),
                               );
                             },

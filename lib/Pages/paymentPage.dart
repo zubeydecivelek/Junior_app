@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:juniorapp/ColorPalette.dart';
+import 'package:juniorapp/Pages/HomePage.dart';
+import 'package:juniorapp/Pages/navigationPage.dart';
+
+import '../Services/authService.dart';
 
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({Key? key}) : super(key: key);
+  int subscriptionType;
+
+  PaymentPage(this.subscriptionType, {super.key});
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -178,9 +184,26 @@ class _PaymentPageState extends State<PaymentPage> {
           height: 50,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(55,10,55,10),
-            child: ElevatedButton(
+            child: /*(cardHolderName.isEmpty|| cardNumber.isEmpty||expiryDate.isNotEmpty|| cvvCode.isEmpty)? Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30.0),
+                color: Color(0xFF9FA8DA),
+              ),
+              child: Center(
+                  child: Text(
+                    "ÖDE!",
+                    style: TextStyle(color: Colors.white),
+                  )),
+            ):*/ ElevatedButton(
               child: Text("ÖDE!"),
-              onPressed: (){},
+              onPressed: ()async{
+                await AuthService().updateSubscription(widget.subscriptionType);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => NavigationPage(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(backgroundColor: ColorPalette().blue,
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(30.0),
