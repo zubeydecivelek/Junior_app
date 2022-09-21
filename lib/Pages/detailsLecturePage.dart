@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Models/LectureModel.dart';
+import 'package:juniorapp/Services/authService.dart';
 import 'package:url_launcher/link.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
@@ -160,8 +161,10 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> with SingleTick
                 child: widget.lectureObj.isStreaming ?  ElevatedButton(
                   child: Text("DERSE KATIL",style: TextStyle(fontSize: 12),),
                   onPressed: ()async{
-
-                    await _launchInBrowser(widget.lectureObj.liveVideoLink);
+                    bool result  = await AuthService().joinClass(context);
+                    if(result){
+                      await _launchInBrowser(widget.lectureObj.liveVideoLink);
+                    }
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: ColorPalette().blue,
                     shape: new RoundedRectangleBorder(
@@ -223,4 +226,6 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> with SingleTick
       throw 'Could not launch $url';
     }
   }
+
+
 }

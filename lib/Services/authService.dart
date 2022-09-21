@@ -5,6 +5,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:juniorapp/Models/UserModel.dart';
+import 'package:juniorapp/Pages/paymentPage.dart';
+import 'package:juniorapp/Pages/pricingPage.dart';
+import '../ColorPalette.dart';
 import '../Pages/RegisterPage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -22,10 +25,8 @@ class AuthService {
       print(name);
       print(doc);
     } catch (e) {
-      print("kullanıcı yok amk");
       return false;
     }
-    print("kullanıcı var amk");
     return true;
   }
 
@@ -65,6 +66,11 @@ class AuthService {
         "subscriptionType": "Aylık",
         "subscriptionStarting": Timestamp.now(),
         "subscriptionEnding": Timestamp.fromDate(nextMonth)
+      });
+    }
+    else{ //ücretsiz
+      await users.doc(uid).update({
+        "subscriptionType": UserModel.ucretsiz,
       });
     }
   }
@@ -128,5 +134,92 @@ class AuthService {
     return UserModel.fromSnapshot(doc);
   }
 
+
+
+
+
+  Future<void> controlSubscription()async{
+    UserModel user = await getMe();
+    ///önce üyeliği bitti mi kontrol et
+
+    if(user.subscriptionType!=UserModel.ucretsiz){
+      DateTime now = DateTime.now();
+      DateTime subscriptionEnding = user.subscriptionEnding.toDate();
+      if((now.compareTo(subscriptionEnding)==-1||now.compareTo(subscriptionEnding)==0)){
+        await updateSubscription(5);
+      }
+    }
+
+
+
+  }
+
+
+  Future<bool> joinClass(BuildContext context)async{
+    await controlSubscription();
+    UserModel user = await getMe();
+    /// ücretsizse hakkı varsa açsın, hakkı azalsın
+
+    if (user.subscriptionType==UserModel.ucretsiz){
+      print("ücretsiz");
+      if (user.remainingFreeLecture>0){
+        users.doc(uid).update(
+            {"remainingFreeLecture": user.remainingFreeLecture - 1});
+        return true;
+      }
+      else{
+        PopUp(context);
+        return false;
+      }
+    }
+    /// hakkı bittiyse üyelik satın almak ister misiniz desin
+
+    ///üyeliği bitmediyse açsın
+
+    return true;
+  }
+
+  PopUp(BuildContext context){
+    return showDialog(context: context, builder: (context)=>AlertDialog(
+      title: Text(
+        "Juniorapp",
+        style: TextStyle(fontSize: 20, color: ColorPalette().blue),
+      ),
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.07,
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: const Text("Ücretsiz giriş hakkın kalmadı. Üyelik satın almak ister misin?",maxLines: 5,),
+      ),
+      actionsPadding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.3,right: MediaQuery.of(context).size.width * 0.05,bottom:MediaQuery.of(context).size.height * 0.01, ),
+      actionsAlignment: MainAxisAlignment.spaceBetween,
+      actions: [
+        InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              "İptal",
+              style: TextStyle(
+                fontSize: 18,
+                color: ColorPalette().grey,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+        InkWell(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => PricingPage(true)));
+            },
+            child: Text(
+              "Evet",
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+        )
+      ],
+    ));
+  }
 
 }
