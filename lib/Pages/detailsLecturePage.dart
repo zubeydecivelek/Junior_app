@@ -226,9 +226,5 @@ class _DetailsLecturePageState extends State<DetailsLecturePage> with SingleTick
       throw 'Could not launch $url';
     }
   }
-<<<<<<< Updated upstream
 
-
-=======
->>>>>>> Stashed changes
 }
