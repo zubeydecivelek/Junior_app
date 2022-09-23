@@ -246,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
     await FlutterShare.share(
         title: 'Uygulamayı paylaş',
         text: "Haydi sen de Juniorapp'i indir ayrıcalıkların farkına var!",
-        linkUrl: 'https://www.youtube.com/watch?v=yG3mCxwOVoU',
+        linkUrl: 'https://www.youtube.com/watch?v=0zxHyFHaKdI',
         chooserTitle: 'Paylaşacağın uygulamayı seç...'
 
     );
