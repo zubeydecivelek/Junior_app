@@ -61,8 +61,12 @@ dependencies:
   http: ^0.13.5
   card_swiper: ^2.0.4
   decorated_icon: ^1.2.1
+  flutter_launcher_icons: ^0.10.0
 
-
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo.png"
 dev_dependencies:
   flutter_test:
     sdk: flutter
