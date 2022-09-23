@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:juniorapp/ColorPalette.dart';
 import 'package:juniorapp/Pages/HomePage.dart';
+import 'package:juniorapp/Pages/navigationPage.dart';
 import 'package:juniorapp/Pages/paymentPage.dart';
 import 'package:juniorapp/Services/authService.dart';
 
@@ -75,11 +76,20 @@ class _PricingPageState extends State<PricingPage> {
                                 send=3;
                                 //AuthService().updateSubscription(3);
                               }
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => PaymentPage(send),
-                                ),
-                              );
+                              if(!dailySelected) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PaymentPage(send),
+                                  ),
+                                );
+                              }
+                              else{
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => NavigationPage(),
+                                  ),
+                                );
+                              }
                             },
                             child: Text("Devam Et"),
                           ),
