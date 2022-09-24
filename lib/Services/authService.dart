@@ -145,7 +145,7 @@ class AuthService {
     if(user.subscriptionType!=UserModel.ucretsiz){
       DateTime now = DateTime.now();
       DateTime subscriptionEnding = user.subscriptionEnding.toDate();
-      if((now.compareTo(subscriptionEnding)==-1||now.compareTo(subscriptionEnding)==0)){
+      if((subscriptionEnding.compareTo(now)==-1||subscriptionEnding.compareTo(now)==0)){
         await updateSubscription(5);
       }
     }
