@@ -76,7 +76,7 @@ class _PricingPageState extends State<PricingPage> {
                                 send=3;
                                 //AuthService().updateSubscription(3);
                               }
-                              if(!dailySelected) {
+                              if(send!=-1) {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => PaymentPage(send),
